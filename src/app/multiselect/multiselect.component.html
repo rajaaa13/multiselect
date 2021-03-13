@@ -1,0 +1,44 @@
+<form>
+    <div>
+        <div class="topSection" (click)="filterItems()">
+            <div class="multiselectLabel">
+                <div class="selectBox" id="myInput" (click)="showCheckboxes($event)">
+                    <div class="tokenContainer" role="textbox">
+                        <div id="multiselectToken{{index}}" class="multiselectToken "
+                            *ngFor="let item of tokenCards; let index=index">
+                            <span class="multiselectTokenLabel">{{item}}</span>
+                            <span class="multiselectTokenIcon" (click)="onTokenClose($event)"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="downArrow" (click)="showCheckboxes($event)">
+                <i class="arrow down"></i>
+            </div>
+
+        </div>
+        <div class="multiselect">
+            <div id="checkboxes" class="checkboxContainer" *ngFor="let data of options; let index=index">
+                <div class="topSection searchBar">
+                    <div>
+                        <input class="inputField" id="myInput" placeholder="Search" (keyup)="searchFunction($event)" />
+                    </div>
+                    <div id="closeId" role="button" class="closeButton" (click)="onClose($event)">
+                        <div class="closeIcon">
+                            <div class="closeLine"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="checkItems">
+                    <div *ngFor="let item of options; let index=index">
+                        <label id="itemLabel{{index}}" value="item.label" class="checkLabel"
+                            (change)="onSelected($event)">
+                            <input type="checkbox" class="inputData" name="{{item.label}}" value="{{item.value}}" />
+                            {{item.label}}
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
