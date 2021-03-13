@@ -6,6 +6,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrls: ['./multiselect.component.css']
 })
 export class MultiselectComponent implements OnInit {
+ 
   @Input() options: any;
   @Input() filter: any;
   @Input() filterBy: any;
@@ -24,10 +25,6 @@ export class MultiselectComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.displayTokenOnLoad();
-  }
-
-  displayTokenOnLoad() {
     //to display the token card on the load, if any value sent in filterby
     if (this.options && this.filter && this.filterBy) {
       for (let i = 0; i < this.options.length; i++) {
@@ -37,7 +34,7 @@ export class MultiselectComponent implements OnInit {
         if (target === filter) {
           this.tokenCards.push(this.options[i].label);
         }
-
+       
       }
     }
   }
@@ -50,6 +47,7 @@ export class MultiselectComponent implements OnInit {
         let filter: string = filterId[1].trim();
         let checkboxes: any = document.getElementsByClassName("inputData");
         for (let i = 0; i < this.options.length; i++) {
+          //making checkbox checked and applying stylings to the filtered value
           let target: string = this.options[i].value;
           if (target === filter) {
             for (let a = 0; a < checkboxes.length; a++) {
@@ -57,21 +55,16 @@ export class MultiselectComponent implements OnInit {
               if (checkboxes[a].value == filter) {
                 checkboxes[a].checked = true;
 
-                const labelId: string = "itemLabel" + i;
+                const labelId: string = "itemLabel"+ i ;
                 const label: any = document.getElementById(labelId);
                 label.style.backgroundColor = "#b8e8fc"
 
                 //pushing selected value to array of selected ones
                 if (this.selectedItems.length == 0) {
                   this.selectedItems.push(this.options[i].value);
-
-                  //sending values to parent component
-                  let obj = { value: '' }
-                  obj.value = this.selectedItems.join();
-                  this.onChange.emit(obj)
+                  console.log(this.options[i].value)
                 }
-
-                //pushing selected value to array of display cards
+                 //pushing selected value to array of display cards
                 if (this.tokenCards.length == 0) {
                   this.tokenCards.push(this.options[i].label);
                 }
@@ -97,12 +90,15 @@ export class MultiselectComponent implements OnInit {
   }
 
   searchFunction(event: any) {
+    let input: any;
     let filter: any;
     let checkboxes: any;
     let label: any;
+    input = event.target.value.toUpperCase();
     filter = event.target.value.toUpperCase();
     checkboxes = document.getElementById("checkboxes");
     label = checkboxes.getElementsByTagName("label")
+    let finalArray = [];
     for (let i = 0; i < label.length; i++) {
       let item = label[i].innerText;
       //if label present changing style to display
@@ -159,13 +155,19 @@ export class MultiselectComponent implements OnInit {
   onTokenClose(event: any) {
     //hiding on click of X icon in cards
     let item: any = event.path[1].innerText;
+
     let tokenCards = document.getElementById(event.path[1].id)
     tokenCards ? tokenCards.style.display = "none" : "";
+    
     this.removeItem(item)
+
+
+
   }
 
   removeItem(label: string) {
     //removing selected value from token card and selected value array on click of token card close
+
     let filter: string = label;
     let checkboxes: any = document.getElementsByClassName("inputData");
 
@@ -173,17 +175,17 @@ export class MultiselectComponent implements OnInit {
       let target: string = this.options[i].label;
       if (target === filter) {
         for (let a = 0; a < checkboxes.length; a++) {
+
           if (checkboxes[a].name == filter) {
+
             checkboxes[a].checked = false;
             let selectedItem: string = checkboxes[a].value;
             let tokenItem: string = label;
-
-            //removing styling for unselected value
-            const labelId: string = "itemLabel" + i;
-            const labelTag: any = document.getElementById(labelId);
-            labelTag.style.backgroundColor = ""
-
-            //removing from selected item
+            const labelId: string = "itemLabel"+ i ;
+             //removing styling for unselected value
+                const labelTag: any = document.getElementById(labelId);
+                labelTag.style.backgroundColor = ""
+                //removing from selected item
             const index = this.selectedItems.indexOf(selectedItem, 0);
             if (index > -1) {
               this.selectedItems.splice(index, 1);
@@ -199,7 +201,7 @@ export class MultiselectComponent implements OnInit {
     }
 
     //sending values to parent component
-    let obj = { value: '' }
+     let obj = { value: '' }
     obj.value = this.selectedItems.join();
     this.onChange.emit(obj)
 
